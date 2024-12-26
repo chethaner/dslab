@@ -1,0 +1,71 @@
+#include <stdio.h>
+#define MAX_SIZE 5
+ 
+int q[MAX_SIZE];
+int f = 0, r = -1;
+int count = 0;
+void delete_front() {
+    if (count == 0) {
+        printf("Underflow of queue\n");
+        return;
+    }
+    printf("The deleted element is %d\n", q[f]);
+    f = (f + 1) % MAX_SIZE;
+    count--;
+}
+ 
+void insert_rear(int item) {
+    if (count == MAX_SIZE) {
+        printf("Overflow of queue\n");
+        return;
+    }
+    r = (r + 1) % MAX_SIZE;
+    q[r] = item;
+    count++;
+}
+ 
+void display() {
+    if (count == 0) {
+        printf("Queue is empty\n");
+        return;
+    }
+    printf("Contents of queue are: ");
+    int i, temp = f;
+    for (i = 0; i < count; i++) {
+        printf("%d ", q[temp]);
+        temp = (temp + 1) % MAX_SIZE;
+    }
+    printf("\n");
+}
+ 
+int main() {
+    int choice, item;
+    for (;;) {
+        printf("\nCircular Queue Operations:\n");
+        printf("1. Insert Rear\n");
+        printf("2. Delete Front\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+ 
+        switch (choice) {
+            case 1:
+                printf("Enter the element to insert: ");
+                scanf("%d", &item);
+                insert_rear(item);
+                break;
+            case 2:
+                delete_front();
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                return 0;
+            default:
+                printf("Invalid choice! Please enter a valid option.\n");
+        }
+    }
+}

@@ -1,0 +1,149 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct student {
+    char usn[15];
+    char name[50];
+    char programme[50];
+    int sem;
+    char phone[15];
+    struct student *link;
+};
+
+typedef struct student *NODE;
+
+NODE getnode() {
+    NODE x;
+    x = (NODE) malloc(sizeof(struct student));
+    return x;
+}
+
+NODE insert_front(NODE first) {
+    NODE temp = getnode();
+    printf("Enter USN: ");
+    scanf("%s", temp->usn);
+    printf("Enter Name: ");
+    scanf("%s", temp->name);
+    printf("Enter Programme: ");
+    scanf("%s", temp->programme);
+    printf("Enter Semester: ");
+    scanf("%d", &temp->sem);
+    printf("Enter Phone Number: ");
+    scanf("%s", temp->phone);
+    temp->link = first;
+    return temp;
+}
+
+void display(NODE first) {
+    NODE temp = first;
+    int count = 0;
+    if (first == NULL) {
+        printf("List is empty\n");
+        return;
+    }
+    printf("Student List:\n");
+    while (temp != NULL) {
+        printf("USN: %s, Name: %s, Programme: %s, Semester: %d, Phone: %s\n",
+               temp->usn, temp->name, temp->programme, temp->sem, temp->phone);
+        temp = temp->link;
+        count++;
+    }
+    printf("Total number of polystudents: %d\n", count);
+}
+
+NODE insert_rear(NODE first) {
+    NODE temp = getnode();
+    printf("Enter USN: ");
+    scanf("%s", temp->usn);
+    printf("Enter Name: ");
+    scanf("%s", temp->name);
+    printf("Enter Programme: ");
+    scanf("%s", temp->programme);
+    printf("Enter Semester: ");
+    scanf("%d", &temp->sem);
+    printf("Enter Phone Number: ");
+    scanf("%s", temp->phone);
+    temp->link = NULL;
+
+    if (first == NULL) return temp;
+    NODE cur = first;
+    while (cur->link != NULL) {
+        cur = cur->link;
+    }
+    cur->link = temp;
+    return first;
+}
+
+NODE delete_front(NODE first) {
+    if (first == NULL) {
+        printf("List is empty\n");
+        return first;
+    }
+    NODE temp = first;
+    first = first->link;
+    printf("Deleted student with USN: %s\n", temp->usn);
+    free(temp);
+    return first;
+}
+
+NODE delete_rear(NODE first) {
+    if (first == NULL) {
+        printf("List is empty\n");
+        return NULL;
+    }
+    if (first->link == NULL) {
+        printf("Deleted student with USN: %s\n", first->usn);
+        free(first);
+        return NULL;
+    }
+    NODE prev = NULL, cur = first;
+    while (cur->link != NULL) {
+        prev = cur;
+        cur = cur->link;
+    }
+    printf("Deleted student with USN: %s\n", cur->usn);
+    free(cur);
+    prev->link = NULL;
+    return first;
+}
+
+int main() {
+    NODE first = NULL;
+    int ch;
+
+    while (1) {
+        printf("\n---- Singly Linked List(SLL) Menu ----");
+        printf("\n1. Create (Insert at Front)");
+        printf("\n2. Display and Count");
+        printf("\n3. Insert at End");
+        printf("\n4. Delete from Front (Stack Pop)");
+        printf("\n5. Delete from End");
+        printf("\n6. Exit");
+        printf("\nEnter your choice: ");
+        scanf("%d", &ch);
+
+        switch (ch) {
+            case 1:
+                first = insert_front(first);
+                break;
+            case 2:
+                display(first);
+                break;
+            case 3:
+                first = insert_rear(first);
+                break;
+            case 4:
+                first = delete_front(first);
+                break;
+            case 5:
+                first = delete_rear(first);
+                break;
+            case 6:
+                exit(0);
+            default:
+                printf("Invalid choice!\n");
+        }
+    }
+    return 0;
+}

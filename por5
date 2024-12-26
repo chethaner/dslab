@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <math.h>
+#include <string.h>
+#include <ctype.h>
+
+int count = 0; // Global counter for move count
+
+double compute(char symbol, double op1, double op2) {
+    switch (symbol) {
+        case '+': return op1 + op2;
+        case '-': return op1 - op2;
+        case '*': return op1 * op2;
+        case '/': return op1 / op2;
+        case '%': return (int)op1 % (int)op2; // Modulo operator for integer division
+        case '$':
+        case '^': return pow(op1, op2);
+        default: return 0;
+    }
+}
+
+// Function to evaluate a postfix expression
+void evaluate_postfix() {
+    double s[20], res, op1, op2;
+    int top = -1, i;
+    char postfix[20], symbol;
+    printf("Enter the postfix expression: ");
+    scanf("%s", postfix);
+    for (i = 0; i < strlen(postfix); i++) {
+        symbol = postfix[i];
+        if (isdigit(symbol)) {
+            s[++top] = (symbol - '0'); // ASCII conversion to digit
+        } else {
+            op2 = s[top--];
+            op1 = s[top--];
+            res = compute(symbol, op1, op2);
+            s[++top] = res;
+        }
+    }
+    res = s[top--];
+    printf("The result is: %f\n", res);
+}
+
+// New Tower of Hanoi function
+void tower(int n, int source, int temp, int dest) {
+    if (n == 1) {
+        printf("\nMove the disc from %c to %c", source + 'A' - 1, dest + 'A' - 1);
+        count++;
+        return;
+    }
+    tower(n - 1, source, dest, temp);
+    printf("\nMove the disc from %c to %c", source + 'A' - 1, dest + 'A' - 1);
+    count++;
+    tower(n - 1, temp, source, dest);
+}
+
+int main() {
+    int choice, n;
+
+    do {
+        printf("\n1. Evaluate postfix expression\n");
+        printf("2. Solve Tower of Hanoi problem\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                evaluate_postfix();
+                break;
+            case 2:
+                printf("Enter the number of disks: ");
+                scanf("%d", &n);
+                count = 0; // Reset the move count for each new problem
+                printf("The moves involved in solving Tower of Hanoi for %d disks are:\n", n);
+                tower(n, 1, 2, 3); // 1 for 'A', 2 for 'B', 3 for 'C'
+                printf("\nTotal moves: %d\n", count);
+                break;
+            case 3:
+                printf("Exiting the program.\n");
+                break;
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    } while (choice != 3);
+
+    return 0;
+}
